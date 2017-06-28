@@ -15,7 +15,7 @@ configuration = json.loads("""
         		"y-coordinate": 665,
         		"font_size": 8,
       		},
-     		{
+     			{
        			"name": "gender",
        			"conditional_coordinates":[    
           			{
@@ -41,22 +41,22 @@ configuration = json.loads("""
     },
     {
      	"page_number": 3,
-      	"variables": [
-    		{
-    			"name": "bank_name",
-    			"x-coordinate": 135,
-    			"y-coordinate": 326
-    		}
-    	]
+      "variables": [
+					{
+						"name": "bank_name",
+						"x-coordinate": 135,
+						"y-coordinate": 326
+					}
+    		]
     },
     {
     	"page_number": 1,
     	"variables": [
-     		{
-        		"name": "user_ifsc",
-    		    "x-coordinate": 400,
-        		"y-coordinate": 6
-      		}
+					{
+						"name": "user_ifsc",
+						"x-coordinate": 400,
+						"y-coordinate": 6
+					}
     	  ] 
       }  
     ]"""
