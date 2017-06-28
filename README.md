@@ -11,7 +11,7 @@ configuration = json.loads("""
     	"variables":[
        		{
         		"name": "name",
-       			"x-coordinate": 180,
+       		  "x-coordinate": 180,
         		"y-coordinate": 665,
         		"font_size": 8,
       		},
