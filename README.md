@@ -1,6 +1,6 @@
 # pdf_writer
 
-## Exapmle
+## Example
 
 import json
 from pdf_writer import pdfWriter
