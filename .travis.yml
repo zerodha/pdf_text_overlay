@@ -1,0 +1,10 @@
+language: python
+python:
+- '2.7'
+deploy:
+  provider: pypi
+  user: quica
+  password:
+    secure: tZ/rRwFPHPgVLRZUfU8N3mQBqvtiJRg8NbfpietZX8HjXmUmDe0P5s5IVRuG7CpIYraMM0RScth6AvA0+MNtpVWLJnICHE9VPS+8hMy8l1iL/fGT43osC0op4/0M7ty9Xs2gffPCTqy3O+ojEjGK7BaGLwExF2qnBPy07/wQIDrq7/hKgG+L4olkGY5zzPp9YxBRw45qkRMv9Br9QGKbULiSj7lFWyzD4sYRsliFNIEmAfBTVukxY4lujLpS8QWIkqQ2AtC4tPhRTc12aH9TCz1Gmu4/5Sht7GwSaJX4kT2P7LiJaG/IgrHbBdce/5M+9BHxXZvb2FaOcQdt87uNf/ugeuGxw7FTS7oDefNQS8+MLveeWF7j6F+De7ns8iinc7ysPzl44MKtaxryP85eqe9vaCXnql8nfv8JHa2OwjF/gAP/8ZDd13NF4z2n6M8a3TpSqZSrvCau1sS2zjLnZ+pFpvNVWouZ6+0klON9gq5aKGqwsW5b9eS4gWsQIqm8sihgz75LVX7NAkVIn5hjvWbl6na2cyoA+2SY9hRUy0pqxpF6ttyxp5p/K2IphkyUoAjVWNDK7ADWpyFxj7P6M+wTKaOVMboVfmQ5QzHitcJV2Xe7QLF/HvptnUzgK2jcntu85poDslpRInOVkufajwB/ZQ2stEmeyMkGstq4ak4=
+  on:
+    tags: true
