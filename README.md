@@ -12,8 +12,7 @@ pdf_text_overlay paramaters
 ```
 import json
 from pdf_writer import pdfWriter
-configuration = json.loads("""
-   	
+configuration = json.loads("""   	
     [{
       "page_number": 2,
       "variables":[
@@ -68,7 +67,7 @@ configuration = json.loads("""
           }
         ] 
       }
-    ]"""
+    ]""")
 
 data = json.loads("""
     {	
@@ -78,6 +77,7 @@ data = json.loads("""
       "bank_name": "HDFC BANK"
     }
 """)
+
 original_pdf = file("file_name.pdf", "rb")
 font = file("font_name.ttf", "rb")
 output = pdfWriter(original_pdf, configuration, data, font)
