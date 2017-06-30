@@ -1,8 +1,8 @@
 # pdf_text_overlay
 
-pdf_text_overlay is a python library to write a text on top of pdf.
-pdf_text_overlay paramaters
- 
+pdf_text_overlay is a python library to write a text on top of pdf. <br>
+
+pdf_text_overlay paramaters 
  - original_pdf (Pdf file object)
  - configuration (configuration data)
  - data (The data which needs to be writen on the pdf)
@@ -71,13 +71,12 @@ configuration = json.loads("""
     ]"""
 
 data = json.loads("""
-
     {	
       "name": "Goli",
       "gender": "Male",
       "user_ifsc": "HDFC0004421",
-      "bank_name": "HDFC BANK",
-	}
+      "bank_name": "HDFC BANK"
+    }
 """)
 original_pdf = file("file_name.pdf", "rb")
 font = file("font_name.ttf", "rb")
