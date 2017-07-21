@@ -1,1 +1,0 @@
-from .pdfWriter import pdfWriter, version

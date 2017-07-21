@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
-  name = 'pdf_writer',
-  packages = ['pdf_writer'], # name of the package
+  name = 'pdf_text_overlay',
+  packages = ['pdf_text_overlay'], # name of the package
   version = '0.1',
   description = 'Python library to write text on top of PDF',
   author = 'Shridhar Patil',
