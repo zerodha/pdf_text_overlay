@@ -4,7 +4,7 @@ pdf_text_overlay lets you add text to the existing pdf.
 
 ## Installation
 
-```pip install pdf_writer```
+```pip install pdf_text_overlay```
 ###### or Clone the repository and run
 ```python setup.py .```
 
