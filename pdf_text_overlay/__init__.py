@@ -1,2 +1,2 @@
-"""Init"""
-from .pdfWriter import pdf_writer, version
+"""Init."""
+from .pdfWriter import pdf_writer # noqa

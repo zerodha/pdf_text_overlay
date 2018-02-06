@@ -1,27 +1,35 @@
 """Pdf text overlay."""
 # -*- coding: utf-8 -*-
-
 import StringIO
-from pyPdf import PdfFileWriter, PdfFileReader
-from reportlab.pdfgen import canvas
+
+from pyPdf import PdfFileReader
+from pyPdf import PdfFileWriter
+
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
 
-class WriteToPdf:
+class WriteToPdf(object):
     """Write text on top of pdf."""
 
-    def __init__(self, original_pdf, configuration, values, font):
+    def __init__(
+        self, original_pdf, configuration,
+        values, font=None, font_size=10
+    ):
         """
-        Iitialise
+        Iitialise.
 
         :param original_pdf (file obj): original pdf file object
         :param configuration (dict): configuration dict
         :param values (dict): values to be printed
         :param font (file obj): font
         """
+        self.font_size = font_size
+
         pdfmetrics.registerFont(TTFont('font_style', font))
+
         self.values = values
         self.original_pdf = original_pdf
         self.configuration = configuration
@@ -29,7 +37,7 @@ class WriteToPdf:
     # create a new PDF with Reportlab
     def create_pew_pdf(self, configuration):
         """
-        Return pdf object
+        Return pdf object.
 
         :param configuration: configuration data
         """
@@ -37,7 +45,7 @@ class WriteToPdf:
         values = self.values
 
         can = canvas.Canvas(pdf, pagesize=letter)
-        can.setFont('font_style', 10)
+        can.setFont('font_style', self.font_size)
 
         for config_data in configuration:
 
@@ -53,20 +61,22 @@ class WriteToPdf:
                         else:
                             value = co_ordinates['print_pattern']
 
-                        if 'font_size' in config_data:
-                            can.setFont('font_style', config_data["font_size"])
-
             else:
                 x = config_data['x-coordinate']
                 y = config_data['y-coordinate']
                 value = values[key]
-                if 'font_size' in config_data:
-                    can.setFont('font_style', config_data["font_size"])
+
+            self.set_font_size(can, config_data)
             can.drawString(x, y, value)
 
         can.save()
 
         return pdf
+
+    def set_font_size(self, can, config_data):
+        """Set font size."""
+        if 'font_size' in config_data:
+            can.setFont('font_style', config_data["font_size"])
 
     def parse_configuration(self, page_number):
         """
@@ -81,7 +91,7 @@ class WriteToPdf:
         return -1
 
     def edit_and_save_pdf(self):
-        """Return file object"""
+        """Return file object."""
         original_pdf = PdfFileReader(self.original_pdf)
         output = PdfFileWriter()
         for i in range(original_pdf.numPages):
@@ -95,7 +105,7 @@ class WriteToPdf:
         return output
 
 
-def pdf_writer(original_pdf, configuration, data, font):
+def pdf_writer(original_pdf, configuration, data, font, font_size=10):
     """
     Return file object.
 
