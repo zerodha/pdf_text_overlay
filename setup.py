@@ -13,7 +13,7 @@ requirements = parse_requirements("requirements.txt", session="")
 # with open('./pdf_text_overlay/__init__.py', 'rb') as f:
 #     version = str(ast.literal_eval(_version_re.search(
 #         f.read().decode('utf-8'))))
-version = 0.3
+version = '0.3.1'
 
 setup(
     name='pdf_text_overlay',
