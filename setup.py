@@ -2,11 +2,7 @@
 # import ast
 # import re
 
-from pip.req import parse_requirements
-
 from setuptools import setup
-
-requirements = parse_requirements("requirements.txt", session="")
 
 # _version_re = re.compile(r'__version__\s+=\s+(.*)')
 
@@ -26,5 +22,5 @@ setup(
     download_url='https://github.com/shridarpatil/pdf_writer/archive/%s.tar.gz' % version, # noqa
     keywords=['pdf writer', 'Pdf Editor'],  # arbitrary keywords
     classifiers=[],
-    install_requires=[str(ir.req) for ir in requirements],
+    install_requires=['pyPdf', 'reportlab'],
 )

@@ -67,8 +67,10 @@ class WriteToPdf(object):
                 value = values[key]
 
             self.set_font_size(can, config_data)
+        try:
             can.drawString(x, y, value)
-
+        except NameError:
+            raise ValueError('could not find co ordinates for key({}) value {}'.format(key, values[key]))
         can.save()
 
         return pdf
