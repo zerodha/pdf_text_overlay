@@ -50,6 +50,11 @@ class WriteToPdf(object):
         for config_data in configuration:
 
             key = config_data['name']
+            self.set_font_size(can, config_data)
+            can.setStrokeColorRGB(0,0,0)
+            can.setFillColorRGB(
+                    0,0,0
+                )
 
             if 'conditional_coordinates' in config_data:
                 for co_ordinates in config_data['conditional_coordinates']:
@@ -60,17 +65,58 @@ class WriteToPdf(object):
                             value = co_ordinates['if_value']
                         else:
                             value = co_ordinates['print_pattern']
+                try:
+                    can.drawString(x, y, value)
+                except NameError:
+                    raise ValueError('could not find co ordinates for key({}) value {}'.format(key, values[key]))
+            elif 'draw_shape' in config_data:
 
+                from reportlab.lib.units import inch
+                # move the origin up and to the left
+
+                can.translate(inch,inch)
+
+                can.setStrokeColorRGB(0,0,0)
+                #     config_data['draw_shape']['r'],
+                #     config_data['draw_shape']['g'],
+                #     config_data['draw_shape']['b']
+                # )
+                can.setFillColorRGB(
+                    config_data['draw_shape']['r'],
+                    config_data['draw_shape']['g'],
+                    config_data['draw_shape']['b']
+                )
+
+                if config_data['draw_shape']['shape'] == 'Line':
+
+
+                    x0 = config_data['draw_shape']['x0-coordinate']
+                    x1 = config_data['draw_shape']['x1-coordinate']
+                    y0 = config_data['draw_shape']['y0-coordinate']
+                    y1 = config_data['draw_shape']['y1-coordinate']
+
+                    can.line(x0*inch,y0*inch, x1*inch, y1*inch)
+                if config_data['draw_shape']['shape'] == 'Rectangle':
+                    x0 = config_data['draw_shape']['x0-coordinate']
+                    x1 = config_data['draw_shape']['x1-coordinate']
+                    y0 = config_data['draw_shape']['y0-coordinate']
+                    y1 = config_data['draw_shape']['y1-coordinate']
+                    fill = config_data['draw_shape'].get('fill', 1)
+
+                    can.rect(x0*inch,y0*inch, x1*inch, y1*inch, fill=fill)
             else:
                 x = config_data['x-coordinate']
                 y = config_data['y-coordinate']
-                value = values[key]
+                value = config_data.get('value', None)
 
-            self.set_font_size(can, config_data)
-        try:
-            can.drawString(x, y, value)
-        except NameError:
-            raise ValueError('could not find co ordinates for key({}) value {}'.format(key, values[key]))
+                if not value:
+                    value = values[key]
+
+                try:
+                    can.drawString(x, y, value)
+                except NameError:
+                    raise ValueError('could not find co ordinates for key({}) value {}'.format(key, values[key]))
+
         can.save()
 
         return pdf
