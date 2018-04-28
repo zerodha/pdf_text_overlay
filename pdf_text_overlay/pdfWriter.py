@@ -104,6 +104,13 @@ class WriteToPdf(object):
                     fill = config_data['draw_shape'].get('fill', 1)
 
                     can.rect(x0*inch,y0*inch, x1*inch, y1*inch, fill=fill)
+            elif 'image' in config_data:
+                x = config_data['image']['x-coordinate']
+                y = config_data['image']['y-coordinate']
+                w = config_data['image']['width']
+                h = config_data['image']['height']
+                can.drawImage(values[key], x, y, width=w, height=h)
+
             else:
                 x = config_data['x-coordinate']
                 y = config_data['y-coordinate']
