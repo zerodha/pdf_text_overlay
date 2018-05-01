@@ -3,3 +3,4 @@ dict/
 pdf_text_overlay.egg-info/
 build/
 dist/
+.tox/
