@@ -128,10 +128,15 @@ class WriteToPDF(object):
                 )
 
             else:
+                if config_data.get('value'):
+                    text = config_data['value']
+                else:
+                    text = self.values[key]
+
                 can.drawString(
                     x=config_data['x-coordinate'],
                     y=config_data['y-coordinate'],
-                    text=config_data.get('value', self.values[key])
+                    text=text
                 )
 
         can.save()
