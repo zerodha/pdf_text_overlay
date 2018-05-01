@@ -1,7 +1,7 @@
-+### Expected behaviour
-+
-+### Actual behaviour
-+
-+### Step to reproduce
-+
-+### Version
+### Expected behaviour
+
+### Actual behaviour
+
+### Step to reproduce
+
+### Version
