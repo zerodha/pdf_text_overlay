@@ -1,15 +1,14 @@
 """Setup.py."""
-# import ast
-# import re
+import ast
+import re
 
 from setuptools import setup
 
-# _version_re = re.compile(r'__version__\s+=\s+(.*)')
+_version_re = re.compile(r'__version__\s+=\s+(.*)')
 
-# with open('./pdf_text_overlay/__init__.py', 'rb') as f:
-#     version = str(ast.literal_eval(_version_re.search(
-#         f.read().decode('utf-8'))))
-version = '0.3.1'
+with open('./pdf_text_overlay/__init__.py', 'rb') as f:
+    version = str(ast.literal_eval(_version_re.search(
+        f.read().decode('utf-8')).group(1)))
 
 setup(
     name='pdf_text_overlay',
