@@ -99,7 +99,7 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/shridarpatil/pdf_text_overlay/tags). 
+For the versions available, see the [tags on this repository](https://github.com/zerodhatech/pdf_text_overlay/tags). 
 
 ## License
 
