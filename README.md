@@ -1,3 +1,5 @@
+[![Build Status](https://img.shields.io/travis/zerodhatech/pdf_text_overlay.svg)](https://travis-ci.org/zerodhatech/pdf_text_overlay)
+
 # pdf_text_overlay
 
 pdf_text_overlay lets you add text to the existing pdf.
