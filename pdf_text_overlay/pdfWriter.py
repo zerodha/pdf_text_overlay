@@ -43,7 +43,7 @@ class WriteToPDF(object):
 
         pdfmetrics.registerFont(TTFont('font_style', font))
 
-    def create_pew_pdf(self, configuration):
+    def create_new_pdf(self, configuration):
         """Create a PDF with reportlab with given configuration
 
         :param configuration: configuration data
@@ -163,7 +163,7 @@ class WriteToPDF(object):
             configuration = config_var_map.get(page_no)
             page = original_pdf.getPage(page_no)
             if configuration:
-                new_pdf = PdfFileReader(self.create_pew_pdf(configuration))
+                new_pdf = PdfFileReader(self.create_new_pdf(configuration))
                 page.mergePage(new_pdf.getPage(0))
             output.addPage(page)
 
