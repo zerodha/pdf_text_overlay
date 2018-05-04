@@ -7,7 +7,10 @@
     :copyright: (c) 2018 by Zerodha Technology.
     :license: see LICENSE for details.
 """
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from pyPdf import PdfFileReader
 from pyPdf import PdfFileWriter
@@ -48,7 +51,7 @@ class WriteToPDF(object):
 
         :param configuration: configuration data
         """
-        pdf = StringIO.StringIO()
+        pdf = StringIO()
 
         can = canvas.Canvas(pdf, pagesize=letter)
         can.setFont('font_style', self.font_size)
