@@ -7,7 +7,10 @@
     :copyright: (c) 2018 by Zerodha Technology.
     :license: see LICENSE for details.
 """
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from pyPdf import PdfFileReader
 from pyPdf import PdfFileWriter
@@ -43,12 +46,12 @@ class WriteToPDF(object):
 
         pdfmetrics.registerFont(TTFont('font_style', font))
 
-    def create_pew_pdf(self, configuration):
+    def create_new_pdf(self, configuration):
         """Create a PDF with reportlab with given configuration
 
         :param configuration: configuration data
         """
-        pdf = StringIO.StringIO()
+        pdf = StringIO()
 
         can = canvas.Canvas(pdf, pagesize=letter)
         can.setFont('font_style', self.font_size)
@@ -163,7 +166,7 @@ class WriteToPDF(object):
             configuration = config_var_map.get(page_no)
             page = original_pdf.getPage(page_no)
             if configuration:
-                new_pdf = PdfFileReader(self.create_pew_pdf(configuration))
+                new_pdf = PdfFileReader(self.create_new_pdf(configuration))
                 page.mergePage(new_pdf.getPage(0))
             output.addPage(page)
 
