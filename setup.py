@@ -22,4 +22,7 @@ setup(
     keywords=['pdf writer', 'Pdf Editor'],  # arbitrary keywords
     classifiers=[],
     install_requires=['pyPdf', 'reportlab'],
+    test_suite='tests',
+    tests_require=['pytest', 'flake8', 'mock'],
+    setup_requires=['pytest-runner']
 )
