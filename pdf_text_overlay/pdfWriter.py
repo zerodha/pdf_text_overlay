@@ -58,8 +58,8 @@ class WriteToPDF(object):
 
         for config_data in configuration:
             try:
-                key = config_data['name']
                 required = config_data.get("required", 0)
+                key = config_data['name']
 
                 if required and not self.values[key]:
                     raise ValueError(
