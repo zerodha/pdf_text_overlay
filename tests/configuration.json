@@ -6,7 +6,8 @@
             "name":"name",
             "x-coordinate":180,
             "y-coordinate":665,
-            "font_size":8
+            "font_size":8,
+            "required": 1
          },
          {
             "name":"gender",
@@ -29,7 +30,8 @@
                   "x-coordinate":178,
                   "y-coordinate":577
                }
-            ]
+            ],
+            "required": 1
          }
       ]
    },
