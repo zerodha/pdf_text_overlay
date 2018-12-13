@@ -57,90 +57,107 @@ class WriteToPDF(object):
         can.setFont('font_style', self.font_size)
 
         for config_data in configuration:
-            key = config_data['name']
-            self.__set_font_size(can, config_data)
-            can.setStrokeColorRGB(0, 0, 0)
-            can.setFillColorRGB(0, 0, 0)
+            try:
+                key = config_data['name']
+                required = config_data.get("required", 0)
 
-            if 'conditional_coordinates' in config_data:
-                try:
-                    co_ordinates, = filter(
-                        lambda c: c['if_value'] == self.values[key],
-                        config_data['conditional_coordinates']
+                if required and not self.values[key]:
+                    raise ValueError(
+                        """Could not find value for key: {}""".format(key)
                     )
-                except ValueError:
-                    raise ConditionalCoordinatesNotFound(
-                        'Could not find co-ordinates for key({}) value {}'
-                        .format(key, self.values[key])
-                    )
-
-                if co_ordinates['print_pattern'] is False:
-                    text = co_ordinates['if_value']
-                else:
-                    text = co_ordinates['print_pattern']
-
-                can.drawString(
-                    x=co_ordinates['x-coordinate'],
-                    y=co_ordinates['y-coordinate'],
-                    text=text
-                )
-
-            elif 'draw_shape' in config_data:
-
-                from reportlab.lib.units import inch
-                # move the origin up and to the left
-
-                can.translate(inch, inch)
+                self.__set_font_size(can, config_data)
                 can.setStrokeColorRGB(0, 0, 0)
-                can.setFillColorRGB(
-                    config_data['draw_shape']['r'],
-                    config_data['draw_shape']['g'],
-                    config_data['draw_shape']['b']
-                )
+                can.setFillColorRGB(0, 0, 0)
 
-                # Get the cartesian coordinates
-                x0 = config_data['draw_shape'].get('x0-coordinate')
-                x1 = config_data['draw_shape'].get('x1-coordinate')
-                y0 = config_data['draw_shape'].get('y0-coordinate')
-                y1 = config_data['draw_shape'].get('y1-coordinate')
+                if 'conditional_coordinates' in config_data:
+                    try:
+                        co_ordinates, = filter(
+                            lambda c: c['if_value'] == self.values[key],
+                            config_data['conditional_coordinates']
+                        )
+                    except ValueError:
+                        if required:
+                            raise ConditionalCoordinatesNotFound(
+                                'Could not find co-ordinates for key({}) value'
+                                '{}'
+                                .format(key, self.values[key])
+                            )
+                        else:
+                            continue
 
-                if config_data['draw_shape']['shape'] == 'Line':
-                    can.line(
-                        x1=x0 * inch,
-                        y1=y0 * inch,
-                        x2=x1 * inch,
-                        y2=y1 * inch
+                    if co_ordinates['print_pattern'] is False:
+                        text = co_ordinates['if_value']
+                    else:
+                        text = co_ordinates['print_pattern']
+
+                    can.drawString(
+                        x=co_ordinates['x-coordinate'],
+                        y=co_ordinates['y-coordinate'],
+                        text=text
                     )
-                elif config_data['draw_shape']['shape'] == 'Rectangle':
-                    fill = config_data['draw_shape'].get('fill', 1)
-                    can.rect(
-                        x=x0 * inch,
-                        y=y0 * inch,
-                        width=x1 * inch,
-                        height=y1 * inch,
-                        fill=fill
+
+                elif 'draw_shape' in config_data:
+
+                    from reportlab.lib.units import inch
+                    # move the origin up and to the left
+
+                    can.translate(inch, inch)
+                    can.setStrokeColorRGB(0, 0, 0)
+                    can.setFillColorRGB(
+                        config_data['draw_shape']['r'],
+                        config_data['draw_shape']['g'],
+                        config_data['draw_shape']['b']
                     )
 
-            elif 'image' in config_data:
-                can.drawImage(
-                    image=self.values[key],
-                    x=config_data['image']['x-coordinate'],
-                    y=config_data['image']['y-coordinate'],
-                    width=config_data['image']['width'],
-                    height=config_data['image']['height']
-                )
+                    # Get the cartesian coordinates
+                    x0 = config_data['draw_shape'].get('x0-coordinate')
+                    x1 = config_data['draw_shape'].get('x1-coordinate')
+                    y0 = config_data['draw_shape'].get('y0-coordinate')
+                    y1 = config_data['draw_shape'].get('y1-coordinate')
 
-            else:
-                if config_data.get('value'):
-                    text = config_data['value']
+                    if config_data['draw_shape']['shape'] == 'Line':
+                        can.line(
+                            x1=x0 * inch,
+                            y1=y0 * inch,
+                            x2=x1 * inch,
+                            y2=y1 * inch
+                        )
+                    elif config_data['draw_shape']['shape'] == 'Rectangle':
+                        fill = config_data['draw_shape'].get('fill', 1)
+                        can.rect(
+                            x=x0 * inch,
+                            y=y0 * inch,
+                            width=x1 * inch,
+                            height=y1 * inch,
+                            fill=fill
+                        )
+
+                elif 'image' in config_data:
+                    can.drawImage(
+                        image=self.values[key],
+                        x=config_data['image']['x-coordinate'],
+                        y=config_data['image']['y-coordinate'],
+                        width=config_data['image']['width'],
+                        height=config_data['image']['height'],
+                        mask='auto'
+                    )
+
                 else:
-                    text = self.values[key]
+                    if config_data.get('value'):
+                        text = config_data['value']
+                    else:
+                        text = self.values[key]
 
-                can.drawString(
-                    x=config_data['x-coordinate'],
-                    y=config_data['y-coordinate'],
-                    text=text
-                )
+                    can.drawString(
+                        x=config_data['x-coordinate'],
+                        y=config_data['y-coordinate'],
+                        text=text
+                    )
+            except KeyError as e:
+                if required:
+                    raise e
+                else:
+                    pass
 
         can.save()
 
