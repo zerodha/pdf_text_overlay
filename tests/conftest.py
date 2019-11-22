@@ -31,11 +31,11 @@ def pdf_writer_inst():
         for var in config["variables"]:
             data[var["name"]] = "".join([
                 random.choice(string.ascii_letters)
-                for n in xrange(10)
+                for n in range(10)
             ])
     return WriteToPDF(
-        original_pdf=file(fp("./blank.pdf")),
+        original_pdf=open(fp("./blank.pdf"), "rb"),
         configuration=configuration,
         values=data,
-        font=file(fp("../examples/Lato-Italic.ttf"))
+        font=open(fp("../examples/Lato-Italic.ttf"), "rb")
     )

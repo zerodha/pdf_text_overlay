@@ -7,13 +7,10 @@
     :copyright: (c) 2018 by Zerodha Technology.
     :license: see LICENSE for details.
 """
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 
-from pyPdf import PdfFileReader
-from pyPdf import PdfFileWriter
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
@@ -51,7 +48,7 @@ class WriteToPDF(object):
 
         :param configuration: configuration data
         """
-        pdf = StringIO()
+        pdf = BytesIO()
 
         can = canvas.Canvas(pdf, pagesize=letter)
         can.setFont('font_style', self.font_size)

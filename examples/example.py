@@ -29,9 +29,9 @@ data = json.loads("""
     }
 """)
 
-original_pdf = file("Blank_Pdf.pdf", "rb")
-font = file("Lato-Italic.ttf", "rb")
+original_pdf = open("Blank_Pdf.pdf", "rb")
+font = open("Lato-Italic.ttf", "rb")
 output = pdf_writer(original_pdf, configuration, data, font)
-outputStream = file("output.pdf", "wb")
+outputStream = open("output.pdf", "wb")
 output.write(outputStream)
 outputStream.close()

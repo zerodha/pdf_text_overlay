@@ -12,8 +12,8 @@ from mock import patch
 
 from pdf_text_overlay import ConditionalCoordinatesNotFound
 from reportlab.lib.utils import ImageReader
-from pyPdf import PdfFileWriter
-from pyPdf.pdf import PageObject
+from PyPDF2 import PdfFileWriter
+from PyPDF2.pdf import PageObject
 
 
 class TestWriteToPDF:
