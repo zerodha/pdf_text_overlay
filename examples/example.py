@@ -1,6 +1,6 @@
 import json
 
-from pdf_text_overlay import pdf_writer
+from pdf_text_overlay import pdf_writer, pdf_from_template
 
 configuration = json.loads("""
     [{
@@ -35,3 +35,16 @@ output = pdf_writer(original_pdf, configuration, data, font)
 outputStream = open("output.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
+
+# Demo: pdf from jinja template
+jinja_data = {
+    "title": "Jinja PDF Demo",
+    "stocks": [
+        {"symbol": "PIEDPIPER", "qty": 100, "price": 2500},
+        {"symbol": "HOOLI", "qty": 100, "price": 2500},
+    ]
+}
+
+with open("template.html") as htmlfile:
+    html_str = htmlfile.read()
+    pdf_from_template(html_str, jinja_data, 'output.pdf')
