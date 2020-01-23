@@ -17,6 +17,9 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
+import pdfkit
+from jinja2 import Template
+
 
 class ConditionalCoordinatesNotFound(Exception):
     """Unable to conditional coordinates"""
@@ -199,3 +202,20 @@ def pdf_writer(original_pdf, configuration, data, font, font_size=10):
     x = WriteToPDF(original_pdf, configuration, data, font)
     output = x.edit_and_save_pdf()
     return output
+
+
+def pdf_from_template(html_template, data):
+    """
+    !Requirement: make sure that wkhtmltopdf is installed in your system
+    For more configuration info: https://pypi.org/project/pdfkit/
+
+    Generate a pdf file from html template
+
+    :param html_template str: html template with jinja template strings
+    :param data dict: keys should match jinja template strings
+
+    return file content as bytes
+    """
+    template = Template(html_template)
+    rendered = template.render(**data)
+    return pdfkit.from_string(rendered, None)

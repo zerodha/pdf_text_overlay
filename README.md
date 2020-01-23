@@ -2,7 +2,9 @@
 
 # pdf_text_overlay
 
-pdf_text_overlay lets you add text to the existing pdf.
+pdf_text_overlay lets you
+* add text to the existing pdf
+* generate pdf from jinja HTML template
 
 ## Installation
 
@@ -12,11 +14,12 @@ or Clone the repository and run
 
 ```python setup.py install```
 
-### Example
+### Example: PDF text overlay
 
 ```python
 import json
 from pdf_text_overlay import pdf_writer
+
 configuration = json.loads("""[
    {
       "page_number":1,
@@ -88,10 +91,30 @@ outputStream = file("output.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 ```
+
+### Example: PDF from template
+```
+jinja_data = {
+    "title": "Jinja PDF Demo",
+    "stocks": [
+        {"symbol": "PIEDPIPER", "qty": 100, "price": 2500},
+        {"symbol": "HOOLI", "qty": 100, "price": 2500},
+    ]
+}
+
+with open("template.html") as htmlfile:
+    html_str = htmlfile.read()
+    filecontent = pdf_from_template(html_str, jinja_data)
+    f = open('output.pdf', 'wb')
+    f.write(filecontent)
+    f.close()
+```
+
 ## Built With
 
 * [pyPdf](http://pybrary.net/pyPdf/) - A Pure-Python library built as a PDF toolkit
 * [reportlab](https://www.reportlab.com/) - An Open Source Python library for generating PDFs and graphics.
+* [pdfkit](https://pypi.org/project/pdfkit/) -  Wrapper for wkhtmltopdf utility to convert HTML to PDF using Webkit
 
 ## Contributing
 
