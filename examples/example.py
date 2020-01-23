@@ -47,4 +47,7 @@ jinja_data = {
 
 with open("template.html") as htmlfile:
     html_str = htmlfile.read()
-    pdf_from_template(html_str, jinja_data, 'output.pdf')
+    filecontent = pdf_from_template(html_str, jinja_data)
+    f = open('output.pdf', 'wb')
+    f.write(filecontent)
+    f.close()
