@@ -204,7 +204,7 @@ def pdf_writer(original_pdf, configuration, data, font, font_size=10):
     return output
 
 
-def pdf_from_template(html_template, data, filename):
+def pdf_from_template(html_template, data):
     """
     !Requirement: make sure that wkhtmltopdf is installed in your system
     For more configuration info: https://pypi.org/project/pdfkit/
@@ -213,7 +213,11 @@ def pdf_from_template(html_template, data, filename):
 
     :param html_template str: html template with jinja template strings
     :param data dict: keys should match jinja template strings
+
+    return file content as bytes
     """
     template = Template(html_template)
     rendered = template.render(**data)
-    pdfkit.from_string(rendered, filename)
+    res = pdfkit.from_string(rendered, None)
+
+    return res
