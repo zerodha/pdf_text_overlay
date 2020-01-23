@@ -218,4 +218,4 @@ def pdf_from_template(html_template, data):
     """
     template = Template(html_template)
     rendered = template.render(**data)
-    retutn pdfkit.from_string(rendered, None)
+    return pdfkit.from_string(rendered, None)
