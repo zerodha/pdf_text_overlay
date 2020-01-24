@@ -94,6 +94,8 @@ outputStream.close()
 
 ### Example: PDF from template
 ```
+from pdf_text_overlay import pdf_from_template
+
 jinja_data = {
     "title": "Jinja PDF Demo",
     "stocks": [
