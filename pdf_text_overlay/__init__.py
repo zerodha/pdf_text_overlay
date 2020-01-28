@@ -7,7 +7,7 @@
 """
 __author__ = 'Shridhar Patil'
 __email__ = 'shridharpatil2792@gmail.com'
-__version__ = '0.3.3'
+__version__ = '0.4.1'
 
 from .pdfWriter import pdf_writer, pdf_from_template, ConditionalCoordinatesNotFound # noqa
 
