@@ -100,7 +100,7 @@ class WriteToPDF(object):
 
                     from reportlab.lib.units import inch
                     # move the origin up and to the left
-
+                    can.saveState()
                     can.translate(inch, inch)
                     can.setStrokeColorRGB(0, 0, 0)
                     can.setFillColorRGB(
@@ -131,6 +131,7 @@ class WriteToPDF(object):
                             height=y1 * inch,
                             fill=fill
                         )
+                    can.restoreState()
 
                 elif 'image' in config_data:
                     can.drawImage(
