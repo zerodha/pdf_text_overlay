@@ -133,7 +133,7 @@ class WriteToPDF(object):
                         )
                     can.restoreState()
 
-                elif 'image' in config_data:
+                elif 'image' in config_data and self.values[key]:
                     can.drawImage(
                         image=self.values[key],
                         x=config_data['image']['x-coordinate'],
