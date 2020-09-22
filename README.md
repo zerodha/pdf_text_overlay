@@ -1,3 +1,4 @@
+ <a href="https://zerodha.tech"><img src="https://zerodha.tech/static/images/github-badge.svg" align="right" /></a>
 [![Build Status](https://img.shields.io/travis/zerodhatech/pdf_text_overlay.svg)](https://travis-ci.org/zerodhatech/pdf_text_overlay)
 
 # pdf_text_overlay
