@@ -9,8 +9,8 @@
 """
 from io import BytesIO
 
-from PyPDF2 import PdfFileReader
-from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfReader
+from PyPDF2 import PdfWriter
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
@@ -171,8 +171,8 @@ class WriteToPDF(object):
 
     def edit_and_save_pdf(self):
         """Return file object."""
-        original_pdf = PdfFileReader(self.original_pdf)
-        output = PdfFileWriter()
+        original_pdf = PdfReader(self.original_pdf)
+        output = PdfWriter()
 
         config_var_map = dict(
             (config['page_number'], config['variables'])
@@ -180,13 +180,13 @@ class WriteToPDF(object):
         )
 
         # Pages begin with numeric 0
-        for page_no in range(original_pdf.numPages):
+        for page_no in range(len(original_pdf.pages)):
             configuration = config_var_map.get(page_no)
-            page = original_pdf.getPage(page_no)
+            page = original_pdf.pages[page_no]
             if configuration:
-                new_pdf = PdfFileReader(self.create_new_pdf(configuration))
-                page.mergePage(new_pdf.getPage(0))
-            output.addPage(page)
+                new_pdf = PdfReader(self.create_new_pdf(configuration))
+                page.merge_page(new_pdf.pages[0])
+            output.add_page(page)
 
         return output
 

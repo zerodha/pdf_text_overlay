@@ -1,4 +1,4 @@
-PyPDF2==1.26.0
+PyPDF2==3.0.3
 reportlab
 pdfkit
 jinja2
