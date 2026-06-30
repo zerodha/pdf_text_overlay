@@ -7,6 +7,7 @@
     :copyright: (c) 2018 by Zerodha Technology.
     :license: see LICENSE for details.
 """
+import os
 from io import BytesIO
 
 from PyPDF2 import PdfReader
@@ -14,7 +15,7 @@ from PyPDF2 import PdfWriter
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.ttfonts import TTFont, TTFError
 from reportlab.pdfgen import canvas
 
 import pdfkit
@@ -24,6 +25,46 @@ from jinja2 import Template
 class ConditionalCoordinatesNotFound(Exception):
     """Unable to conditional coordinates"""
     pass
+
+
+class InvalidFontError(Exception):
+    """Raised when the supplied font cannot be used to render the PDF."""
+    pass
+
+
+def _load_font(font):
+    """Validate ``font`` and load it as a reportlab TTFont.
+
+    :param font: path (str/bytes/os.PathLike) to a ``.ttf`` file, or a
+        file-like object opened in binary mode (e.g. ``open(path, "rb")``).
+    :raises InvalidFontError: if ``font`` is missing, of an unsupported
+        type, or cannot be parsed as a TrueType font.
+    """
+    if font is None:
+        raise InvalidFontError(
+            "font is required: pass a path to a .ttf file, or a "
+            "file-like object opened in binary mode "
+            "(e.g. open('font.ttf', 'rb'))"
+        )
+
+    is_file_like = hasattr(font, "read")
+    is_path = isinstance(font, (str, bytes, os.PathLike))
+
+    if not is_file_like and not is_path:
+        raise InvalidFontError(
+            "font must be a path to a .ttf file or a file-like object "
+            "opened in binary mode, got {!r}".format(type(font).__name__)
+        )
+
+    if is_path and not os.path.isfile(font):
+        raise InvalidFontError("Font file not found: {!r}".format(font))
+
+    try:
+        return TTFont('font_style', font)
+    except TTFError as e:
+        raise InvalidFontError(
+            "Could not load font {!r}: {}".format(font, e)
+        )
 
 
 class WriteToPDF(object):
@@ -37,14 +78,17 @@ class WriteToPDF(object):
         :param original_pdf (file obj): original pdf file object
         :param configuration (dict): configuration dict
         :param values (dict): values to be printed
-        :param font (file obj): font
+        :param font: path to a .ttf file, or a file-like object opened in
+            binary mode (e.g. open("font.ttf", "rb"))
+        :param font_size (int): default font size used for text drawn
+            without a per-field "font_size" in their configuration
         """
         self.original_pdf = original_pdf
         self.configuration = configuration
         self.values = values
         self.font_size = font_size
 
-        pdfmetrics.registerFont(TTFont('font_style', font))
+        pdfmetrics.registerFont(_load_font(font))
 
     def create_new_pdf(self, configuration):
         """Create a PDF with reportlab with given configuration
@@ -198,9 +242,12 @@ def pdf_writer(original_pdf, configuration, data, font, font_size=10):
     :param original_pdf (file obj): original pdf file object
     :param configuration (dict): configuration dict
     :param values (dict): values to be printed
-    :param font (file obj): font
+    :param font: path to a .ttf file, or a file-like object opened in
+        binary mode (e.g. open("font.ttf", "rb"))
+    :param font_size (int): default font size used for text drawn without
+        a per-field "font_size" in their configuration
     """
-    x = WriteToPDF(original_pdf, configuration, data, font)
+    x = WriteToPDF(original_pdf, configuration, data, font, font_size)
     output = x.edit_and_save_pdf()
     return output
 

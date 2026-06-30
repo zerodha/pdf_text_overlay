@@ -24,7 +24,18 @@ def fp(rel_path):
 
 
 @pytest.fixture
-def pdf_writer_inst():
+def font_path():
+    return fp("../examples/Lato-Italic.ttf")
+
+
+@pytest.fixture
+def blank_pdf():
+    with open(fp("./blank.pdf"), "rb") as f:
+        yield f
+
+
+@pytest.fixture
+def pdf_writer_inst(font_path):
     configuration, = json.loads(open(fp("./configuration.json")).read()),
     data = {}
     for config in configuration:
@@ -37,5 +48,5 @@ def pdf_writer_inst():
         original_pdf=open(fp("./blank.pdf"), "rb"),
         configuration=configuration,
         values=data,
-        font=open(fp("../examples/Lato-Italic.ttf"), "rb")
+        font=open(font_path, "rb")
     )

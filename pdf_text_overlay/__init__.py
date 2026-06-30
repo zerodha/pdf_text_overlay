@@ -9,7 +9,17 @@ __author__ = 'Shridhar Patil'
 __email__ = 'shridharpatil2792@gmail.com'
 __version__ = '0.4.2'
 
-from .pdfWriter import pdf_writer, pdf_from_template, ConditionalCoordinatesNotFound # noqa
+from .pdfWriter import ( # noqa
+    pdf_writer,
+    pdf_from_template,
+    ConditionalCoordinatesNotFound,
+    InvalidFontError,
+)
 
 
-__all__ = ["pdf_writer", "pdf_from_template", "ConditionalCoordinatesNotFound"]
+__all__ = [
+    "pdf_writer",
+    "pdf_from_template",
+    "ConditionalCoordinatesNotFound",
+    "InvalidFontError",
+]

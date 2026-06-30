@@ -10,10 +10,12 @@
 import pytest
 from mock import patch
 
-from pdf_text_overlay import ConditionalCoordinatesNotFound
+from pdf_text_overlay import ConditionalCoordinatesNotFound, InvalidFontError
+from pdf_text_overlay.pdfWriter import WriteToPDF, pdf_writer
 from reportlab.lib.utils import ImageReader
-from PyPDF2 import PdfFileWriter
-from PyPDF2.pdf import PageObject
+from reportlab.pdfgen import canvas
+from PyPDF2 import PdfWriter
+from PyPDF2._page import PageObject
 
 
 class TestWriteToPDF:
@@ -89,11 +91,96 @@ class TestWriteToPDF:
         pdf = pdf_writer_inst.create_new_pdf(configuration)
         assert pdf is not None
 
-    @patch.object(PageObject, "mergePage")
-    @patch.object(PdfFileWriter, "addPage")
-    def test_edit_and_save_pdf(self, mock_merge, mock_add, pdf_writer_inst):
+    @patch.object(PageObject, "merge_page")
+    @patch.object(PdfWriter, "add_page")
+    def test_edit_and_save_pdf(self, mock_add, mock_merge, pdf_writer_inst):
         pdf_writer_inst.values['gender'] = 'Male'
         output = pdf_writer_inst.edit_and_save_pdf()
         assert output is not None
         assert mock_merge.call_count == 3
         assert mock_add.call_count == 3
+
+    def test_custom_font_size_is_applied(self, pdf_writer_inst):
+        """font_size should be forwarded to the underlying canvas font."""
+        pdf_writer_inst.font_size = 24
+        pdf_writer_inst.values['gender'] = 'Male'
+        configuration = pdf_writer_inst.configuration[0]['variables']
+
+        with patch.object(canvas.Canvas, "setFont") as mock_set_font:
+            pdf_writer_inst.create_new_pdf(configuration)
+
+        mock_set_font.assert_any_call('font_style', 24)
+
+    def test_default_font_size_is_ten(self, pdf_writer_inst):
+        assert pdf_writer_inst.font_size == 10
+
+
+class TestFontValidation:
+
+    def test_missing_font_raises_invalid_font_error(self, blank_pdf):
+        with pytest.raises(InvalidFontError):
+            WriteToPDF(
+                original_pdf=blank_pdf,
+                configuration=[],
+                values={},
+                font=None,
+            )
+
+    def test_wrong_type_font_raises_invalid_font_error(self, blank_pdf):
+        with pytest.raises(InvalidFontError):
+            WriteToPDF(
+                original_pdf=blank_pdf,
+                configuration=[],
+                values={},
+                font=12345,
+            )
+
+    def test_nonexistent_font_path_raises_invalid_font_error(self, blank_pdf):
+        with pytest.raises(InvalidFontError):
+            WriteToPDF(
+                original_pdf=blank_pdf,
+                configuration=[],
+                values={},
+                font="/no/such/font.ttf",
+            )
+
+    def test_font_file_object_is_accepted(self, blank_pdf, font_path):
+        with open(font_path, "rb") as font_file:
+            inst = WriteToPDF(
+                original_pdf=blank_pdf,
+                configuration=[],
+                values={},
+                font=font_file,
+            )
+        assert inst is not None
+
+    def test_font_path_string_is_accepted(self, blank_pdf, font_path):
+        inst = WriteToPDF(
+            original_pdf=blank_pdf,
+            configuration=[],
+            values={},
+            font=font_path,
+        )
+        assert inst is not None
+
+
+class TestPdfWriter:
+
+    @patch("pdf_text_overlay.pdfWriter.WriteToPDF")
+    def test_forwards_font_and_font_size(self, mock_write_to_pdf):
+        mock_instance = mock_write_to_pdf.return_value
+
+        pdf_writer("original_pdf", [], {}, "font", font_size=24)
+
+        mock_write_to_pdf.assert_called_once_with(
+            "original_pdf", [], {}, "font", 24
+        )
+        mock_instance.edit_and_save_pdf.assert_called_once()
+
+    @patch("pdf_text_overlay.pdfWriter.WriteToPDF")
+    def test_default_font_size_forwarded(self, mock_write_to_pdf):
+        pdf_writer("original_pdf", [], {}, "font")
+
+        mock_write_to_pdf.assert_called_once_with(
+            "original_pdf", [], {}, "font", 10
+        )

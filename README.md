@@ -15,6 +15,30 @@ or Clone the repository and run
 
 ```python setup.py install```
 
+### Prerequisites
+
+`pdf_text_overlay` uses [pdfkit](https://pypi.org/project/pdfkit/) to generate PDFs from HTML templates. `pdfkit` is a wrapper and does not render PDFs itself — it requires the external [wkhtmltopdf](https://wkhtmltopdf.org/) binary to be installed separately and available on your system `PATH`.
+
+Install `wkhtmltopdf` for your platform:
+
+* **Linux (Debian/Ubuntu)**
+
+  ```sh
+  sudo apt-get install wkhtmltopdf
+  ```
+
+* **macOS (Homebrew)**
+
+  ```sh
+  brew install --cask wkhtmltopdf
+  ```
+
+* **Windows**
+
+  Download and run the installer from the [wkhtmltopdf downloads page](https://wkhtmltopdf.org/downloads.html), then add the installation directory (e.g. `C:\Program Files\wkhtmltopdf\bin`) to your system `PATH`.
+
+After installation, verify it's accessible by running `wkhtmltopdf --version` from a terminal. If the command is not found, double-check that the binary's location has been added to your `PATH`.
+
 ### Example: PDF text overlay
 
 ```python
@@ -85,16 +109,21 @@ data = json.loads("""{
    "bank_name":"HDFC BANK"
 }""")
 
-original_pdf = file("file_name.pdf", "rb")
-font = file("font_name.ttf", "rb")
-output = pdf_writer(original_pdf, configuration, data, font)
-outputStream = file("output.pdf", "wb")
+original_pdf = open("file_name.pdf", "rb")
+font = open("font_name.ttf", "rb")
+output = pdf_writer(original_pdf, configuration, data, font, font_size=10)
+outputStream = open("output.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 ```
 
+`pdf_writer(original_pdf, configuration, data, font, font_size=10)` parameters:
+
+* `font` (required) - either a path (`str`) to a `.ttf` file, or a file-like object opened in binary mode, e.g. `open("font.ttf", "rb")`. Passing `None` or an invalid path/type raises `InvalidFontError` with a clear message instead of an obscure ReportLab error.
+* `font_size` (optional, default `10`) - the default font size used to draw text. It can be overridden per field by setting `"font_size"` on that field's entry in `configuration` (see the `"name"` field above).
+
 ### Example: PDF from template
-```
+```python
 from pdf_text_overlay import pdf_from_template
 
 jinja_data = {
